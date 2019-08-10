@@ -38,7 +38,6 @@ export default class MyApp extends Component {
         />
         <View
           style={styles.loginButton}
-
         >
           <Text>登录</Text>
         </View>
