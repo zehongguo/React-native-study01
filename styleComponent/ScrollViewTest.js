@@ -1,0 +1,171 @@
+import React, {
+  Component
+} from 'react'
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  Text
+} from 'react-native'
+import Dimensions from 'Dimensions'
+import TimerMixin from 'react-timer-mixin'
+console.log([TimerMixin]);
+const {
+  width
+} = Dimensions.get('window')
+export default class ScrollViewTest extends Component {
+  constructor() {
+    super();
+    mixins = [TimerMixin],
+      this.state = {
+        currentPage: 0,
+      }
+  }
+
+  componentDidMount() {
+    this.startInterval();
+  }
+  //组件卸载清除定时器
+  componentWillUnmount() {
+    clearInterval(this.Timer);
+  }
+  //定时器
+  startInterval = () => {
+    var currentPage;
+    this.Timer = setInterval(() => {
+      //求出当前页，并+1，如果在最后一张，重新返回到第一张
+      if (this.state.currentPage + 1 == 4) {
+        currentPage = 0
+      } else {
+        currentPage = this.state.currentPage + 1
+      }
+      this.setState({
+        currentPage
+      })
+
+      //获取ScrollView的真实节点,并改变他的偏移量,
+      this.refs.scorllViewRef.scrollTo({
+        x: currentPage * width,
+        y: 0,
+        animated: true,
+      })
+    }, 2000)
+  }
+  //渲然ScrollView的内容
+  renderView = () => {
+    let Views = [];
+    let ViewsColor = ["#458", "#648", "#134", "#784"]
+    for (let i = 0; i < 4; i++) {
+      Views.push( < View key = {
+          i
+        }
+        style = {
+          {
+            width,
+            height: 200,
+            backgroundColor: ViewsColor[i]
+          }
+        }
+        />
+      )
+    }
+    return Views;
+  }
+
+
+  renderIndicator = () => {
+    let indicattors = [];
+    for (let i = 0; i < 4; i++) {
+      indicattors.push( <
+        Text key = {
+          i
+        }
+        style = {
+          {
+            fontSize: 25,
+            marginLeft: 10,
+            color: this.state.currentPage === i ? "black" : "white"
+          }
+        } >
+        & bull; <
+        /Text>
+      )
+    }
+    return indicattors;
+  }
+
+
+  //滚动完一帧更改圆点的颜色
+  changeIndicator = (e) => {
+    //获取ScrollView的偏移量
+    let offsetX = e.nativeEvent.contentOffset.x;
+    this.setState({
+      currentPage: offsetX / width,
+    })
+  }
+
+
+  render() {
+    return ( <
+      View style = {
+        styles.container
+      } >
+      <
+      ScrollView ref = "scorllViewRef"
+      horizontal = {
+        true
+      } //为true时为子视图在水平方向
+      bounces = {
+        false
+      } //达到末尾是否可以弹性拉一小截
+      keyboardDismissMode = {
+        "on-drag"
+      } //滑动时是否隐藏键盘
+      pagingEnabled = {
+        true
+      } //拖动一整页,默认为false
+      // scrollEnabled={false}//禁止拖动
+      showsHorizontalScrollIndicator = {
+        false
+      } //不显示水平滚动条
+      onMomentumScrollEnd = {
+        (e) => this.changeIndicator(e)
+      } //滚动动画结束时调用此函数。
+      onScrollBeginDrag = {
+        () => clearInterval(this.Timer)
+      } //拖动开始触发的事件，清除定时器
+      onScrollEndDrag = {
+        () => this.startInterval()
+      } //拖动结束，重新开启定时器
+      >
+      {
+        this.renderView()
+      } <
+      /ScrollView> <
+      View style = {
+        styles.indicatorStyle
+      } > {
+        /* 指示器小圆点 */ } {
+        this.renderIndicator()
+      } <
+      /View> <
+      /View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 25
+  },
+  indicatorStyle: {
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 0,
+    height: 30,
+    width,
+    backgroundColor: "rgba(0,0,0,0)",
+    justifyContent: "center",
+    alignItems: 'center'
+  }
+})

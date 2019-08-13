@@ -10,7 +10,8 @@ import {
   TextInput,
   Text,
   StyleSheet,
-  Image
+  Image,
+  TouchableOpacity//一个可以触发点击按钮功能的组件
 } from 'react-native'
 
 export default class MyApp extends Component {
@@ -29,18 +30,27 @@ export default class MyApp extends Component {
         />
         <TextInput
           placeholder="账号"
+          clearButtonMode={"always"}//是否显示清除按钮
+          keyboardAppearance={"dark"}
           style={styles.loginInput}
         />
         <TextInput
           placeholder="密码"
           password={true}
+          clearButtonMode={"always"}
           style={styles.loginInput}
         />
-        <View
-          style={styles.loginButton}
+        <TouchableOpacity
+          activeOpacity={0.5} //按下时的按钮区域的透明度
+          onPress={() => console.log('点击事件')}
+          onPressIn={() => console.log('按下事件')}
+          onPressOut={() => console.log('抬起事件')}
+          onLongPress={() => console.log('长按事件')}
         >
-          <Text>登录</Text>
-        </View>
+          <View style={styles.loginButton}>
+            <Text>登录</Text>
+          </View>
+        </TouchableOpacity>
         <View
           style={styles.loginSetting}
         >
@@ -74,7 +84,7 @@ export default class MyApp extends Component {
               marginLeft: 10
             }} />
         </View>
-      </View>
+      </View >
     )
   }
 }
@@ -92,7 +102,7 @@ const styles = StyleSheet.create({
     marginTop: 1
   },
   loginButton: {
-    width: "90%",
+    width: 300,
     height: 40,
     backgroundColor: "#5687",
     alignItems: "center",

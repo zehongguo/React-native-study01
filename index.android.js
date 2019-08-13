@@ -8,11 +8,11 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
 } from 'react-native';
-import App from './LoginView'
+import NiceLoyout from './styleComponent/NiceLoyout'
 export default class MyApp extends Component {
   render() {
     return (
-      <App />
+      <NiceLoyout />
     );
   }
 }
